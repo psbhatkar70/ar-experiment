@@ -1,75 +1,37 @@
-import React from 'react';
-// @ts-ignore
+import './App.css';
+// We import the component to register the web component in the window registry
 import '@google/model-viewer';
 
-// --- THE BYPASS FIX ---
-// We treat the tag string as a generic component. 
-// TypeScript will now ignore strict type checking for this specific tag.
-const ModelViewer = 'model-viewer' as any;
-
-const App: React.FC = () => {
-  const MODEL_URL = "/models/cake.glb";
-
+function App() {
   return (
-    <div style={styles.container}>
-      <ModelViewer
-        src={MODEL_URL}
-        alt="A 3D Cake"
-        
-        // --- AR Configuration ---
-        ar={true}
-        ar-modes="webxr scene-viewer quick-look"
-        
-        // --- YOUR CONSTRAINTS ---
+    <div className="ar-container">
+      {/* Architectural Note: 
+        We are using the Web Component directly. 
+        'ar-placement="floor"' ensures it snaps to surfaces.
+        'ar-scale="fixed"' satisfies your constraint: NO resizing allowed.
+      */}
+      {/* @ts-ignore: Custom Web Component types are conflicting with React 19 types */}
+      <model-viewer 
+      src="/models/cake.glb"
+        alt="A 3D model of a cake"
+        ar
+        // Priority: WebXR (seamless) -> SceneViewer (Android Native) -> QuickLook (iOS Native)
+        ar-modes="webxr scene-viewer quick-look" 
         ar-scale="fixed"
-        ar-placement="floor"
-        disable-zoom={true}
-        disable-pan={true}
-        interaction-prompt="none"
-        
-        // --- Visuals ---
+        camera-controls={false} // Disables rotation/zoom in the 2D preview
+        disable-zoom // Explicitly disables zooming
+        interaction-prompt="none" // Hides the "move phone" helper UI
         shadow-intensity="1"
-        camera-controls={false}
-        
-        style={styles.viewer}
+        style={{ width: '100%', height: '100vh', backgroundColor: '#111' }}
       >
-        <button slot="ar-button" style={styles.arButton}>
-          View Cake in AR
+        {/* Custom Button Slot to override default UI */}
+        <button slot="ar-button" className="ar-button">
+          See in AR
         </button>
-      </ModelViewer>
+        {/* @ts-ignore: Custom Web Component types are conflicting with React 19 types */}
+      </model-viewer>
     </div>
   );
-};
-
-// Styles
-const styles: { [key: string]: React.CSSProperties } = {
-  container: {
-    width: '100vw',
-    height: '100vh',
-    backgroundColor: '#f5f5f5',
-    display: 'flex',
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  viewer: {
-    width: '100%',
-    height: '100%',
-  },
-  arButton: {
-    backgroundColor: '#000000',
-    color: 'white',
-    borderRadius: '30px',
-    border: 'none',
-    position: 'absolute',
-    bottom: '50px',
-    left: '50%',
-    transform: 'translateX(-50%)',
-    padding: '12px 24px',
-    fontWeight: 'bold',
-    fontSize: '16px',
-    cursor: 'pointer',
-    zIndex: 10,
-  }
-};
+}
 
 export default App;
