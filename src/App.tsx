@@ -1,34 +1,37 @@
 import './App.css';
-// We import the component to register the web component in the window registry
 import '@google/model-viewer';
 
 function App() {
   return (
     <div className="ar-container">
-      {/* Architectural Note: 
-        We are using the Web Component directly. 
-        'ar-placement="floor"' ensures it snaps to surfaces.
-        'ar-scale="fixed"' satisfies your constraint: NO resizing allowed.
-      */}
       {/* @ts-ignore: Custom Web Component types are conflicting with React 19 types */}
       <model-viewer 
-      src="/models/cake.glb"
+        src="/models/cake.glb"
         alt="A 3D model of a cake"
         ar
-        // Priority: WebXR (seamless) -> SceneViewer (Android Native) -> QuickLook (iOS Native)
         ar-modes="webxr scene-viewer quick-look" 
         ar-scale="fixed"
-        camera-controls={false} // Disables rotation/zoom in the 2D preview
-        disable-zoom // Explicitly disables zooming
-        interaction-prompt="none" // Hides the "move phone" helper UI
-        shadow-intensity="1"
-        style={{ width: '100%', height: '100vh', backgroundColor: '#111' }}
+        
+        // --- VISUAL FIXES FOR 2D PREVIEW ---
+        // 1. Pull the camera back: '45deg' (azimuth), '55deg' (elevation), '2m' (radius/distance)
+        // Adjust '2m' to '3m' or '1.5m' depending on how big your cake actually is.
+        camera-orbit="45deg 55deg 2.5m" 
+        
+        // 2. Widen the lens slightly (default is often too narrow)
+        field-of-view="30deg"
+        
+        // 3. Prevent user from messing up the preview
+        camera-controls={false} 
+        disable-zoom 
+        interaction-prompt="none"
+        
+        // Style: Ensure the component itself fits the container
+        style={{ width: '100%', height: '100%' }} 
       >
-        {/* Custom Button Slot to override default UI */}
         <button slot="ar-button" className="ar-button">
           See in AR
         </button>
-        {/* @ts-ignore: Custom Web Component types are conflicting with React 19 types */}
+      {/* @ts-ignore */}
       </model-viewer>
     </div>
   );
