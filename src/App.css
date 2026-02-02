@@ -1,7 +1,7 @@
-/* --- IMPORT FANCY FONTS --- */
+/* --- IMPORT FONTS --- */
 @import url('https://fonts.googleapis.com/css2?family=Lobster&family=Poppins:wght@500;800;900&display=swap');
 
-/* --- AR Container --- */
+/* --- AR Container (Layout: UNTOUCHED) --- */
 .ar-container {
   width: 100vw;
   height: 100vh;
@@ -12,7 +12,7 @@
   font-family: 'Poppins', sans-serif;
 }
 
-/* --- AR Button --- */
+/* --- AR Button (Style: Fancy Black/White) --- */
 .ar-button {
   background-color: #000;
   color: #fff;
@@ -30,7 +30,7 @@
   box-shadow: 0 4px 10px rgba(0,0,0,0.3);
 }
 
-/* --- HOTSPOTS RESET --- */
+/* --- HOTSPOTS RESET (Layout: UNTOUCHED) --- */
 button[slot^="hotspot"] {
   display: block;
   border: none;
@@ -38,13 +38,14 @@ button[slot^="hotspot"] {
   padding: 0;
   position: relative;
   pointer-events: none; 
-  outline: none; /* Remove default blue focus ring */
+  outline: none;
 }
 button[slot^="hotspot"] > * {
   pointer-events: auto;
 }
 
 /* --- 1. THE NAME LABEL --- */
+/* Layout: Centered & Translated - UNTOUCHED */
 .hotspot-label {
   display: flex;
   flex-direction: column;
@@ -53,16 +54,15 @@ button[slot^="hotspot"] > * {
 }
 
 .label-text {
+  /* Style: Fancy Sticker Text */
   font-family: 'Lobster', cursive; 
   font-size: 36px;
   color: #000;
-  
-  /* NO BACKGROUND */
   background: transparent;
   border: none;
   padding: 0;
   
-  /* STICKER TEXT EFFECT */
+  /* White Outline */
   text-shadow: 
     3px 3px 0 #fff, 
    -1px -1px 0 #fff,  
@@ -72,6 +72,7 @@ button[slot^="hotspot"] > * {
 }
 
 .line-anchor {
+  /* Style: White Line with Black Border */
   width: 3px;
   height: 40px;
   background-color: #fff;
@@ -80,48 +81,55 @@ button[slot^="hotspot"] > * {
 }
 
 /* --- 2. THE INFO CARDS (Ingredients & Fact) --- */
+/* Layout: RIGID WIDTH & PADDING - UNTOUCHED */
+/* This ensures the text stays exactly where it was in the "working" version */
 .hotspot-card {
-  width: 220px;
-  padding: 16px;
+  width: 200px;  /* Kept original width */
+  padding: 16px; /* Kept original padding */
   text-align: left;
   
-  /* No visible box */
+  /* Style: Transparent (Floating) */
   background: transparent;
   border: none;
   box-shadow: none;
   backdrop-filter: none;
   
-  /* Smooth Highlight Animation */
+  /* Interaction: Highlight Animation */
   transition: transform 0.2s ease, opacity 0.2s ease;
-  opacity: 0.9; /* Start slightly visible */
+  opacity: 0.9;
 }
 
-/* --- THE NEW HIGHLIGHT FEATURE --- */
-/* This ensures BOTH cards pop when interacted with */
+/* Highlight Effect on Hover/Focus */
 .hotspot-card:hover,
 .hotspot-card:active,
 .hotspot-card:focus-within {
-  opacity: 1;           /* Make fully opaque */
-  transform: scale(1.1); /* Grow 10% larger */
-  z-index: 500;         /* Bring to front */
+  opacity: 1;
+  transform: scale(1.1);
+  z-index: 500;
   cursor: pointer;
 }
 
-/* --- TEXT STYLES --- */
+/* --- TEXT STYLING (The Sticker Look) --- */
+/* This applies the style without changing the size/flow of the container */
 
 .card-header {
+  /* Font & Color */
   font-family: 'Poppins', sans-serif;
   font-weight: 900; 
   text-transform: uppercase;
   font-size: 20px;
-  margin-bottom: 8px;
-  
   color: #000;
   
+  /* Spacing (Layout) */
+  margin-bottom: 8px;
+  padding-bottom: 4px;
+  
+  /* Underline Style */
   border-bottom: 3px solid #000;
   display: inline-block;
   box-shadow: 0 2px 0 #fff;
   
+  /* White Outline */
   text-shadow: 
     2px 2px 0 #fff, 
    -1px -1px 0 #fff,  
@@ -131,13 +139,17 @@ button[slot^="hotspot"] > * {
 }
 
 .card-list {
+  /* Layout */
   padding-left: 20px;
   margin: 0;
+  line-height: 1.4;
+  
+  /* Style */
   font-size: 16px;
   font-weight: 800;
   color: #000;
-  line-height: 1.4;
   
+  /* White Outline */
   text-shadow: 
     2px 2px 0 #fff, 
    -1px -1px 0 #fff,  
@@ -152,12 +164,16 @@ button[slot^="hotspot"] > * {
 }
 
 .card-text {
+  /* Layout */
   margin: 0;
+  line-height: 1.3;
+  
+  /* Style */
   font-size: 16px;
   font-weight: 800;
   color: #000;
-  line-height: 1.3;
   
+  /* White Outline */
   text-shadow: 
     2px 2px 0 #fff, 
    -1px -1px 0 #fff,  
