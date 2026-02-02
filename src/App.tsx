@@ -35,23 +35,25 @@ function App() {
 
         style={{ width: '100%', height: '100%' }} 
       >
-        {/* --- HOTSPOT 1: TOP (40cm Up) --- */}
+        {/* --- HOTSPOT 1: NAME (User X = -40cm, User Z = 30cm) --- */}
+        {/* WebGL Coords: X=-0.4, Y=0.3, Z=0 */}
         <button 
           className="hotspot-label" 
-          slot="hotspot-top" 
-          data-position="0m 0.4m 0m" 
-          data-normal="0m 1m 0m"
+          slot="hotspot-name" 
+          data-position="-0.4m 0.3m 0m" 
+          data-normal="-1m 0m 0m" 
         >
           <div className="label-text">Hello Deveksh is Gagan</div>
           <div className="line-anchor"></div>
         </button>
 
-        {/* --- HOTSPOT 2: RIGHT (3 o'clock - Ingredients) --- */}
+        {/* --- HOTSPOT 2: INGREDIENTS (User Y = +50cm) --- */}
+        {/* WebGL Coords: X=0, Y=0.3, Z=0.5 (User Y maps to WebGL Z) */}
         <button 
           className="hotspot-card" 
-          slot="hotspot-right" 
-          data-position="0.35m 0.15m 0m" 
-          data-normal="1m 0m 0m"
+          slot="hotspot-ingredients" 
+          data-position="0m 0.3m 0.5m" 
+          data-normal="0m 0m 1m"
         >
           <div className="card-header">Ingredients</div>
           <ul className="card-list">
@@ -62,12 +64,13 @@ function App() {
           </ul>
         </button>
 
-        {/* --- HOTSPOT 3: LEFT (9 o'clock - Random Fact) --- */}
+        {/* --- HOTSPOT 3: FACT (User Y = -50cm) --- */}
+        {/* WebGL Coords: X=0, Y=0.3, Z=-0.5 */}
         <button 
           className="hotspot-card" 
-          slot="hotspot-left" 
-          data-position="-0.35m 0.15m 0m" 
-          data-normal="-1m 0m 0m"
+          slot="hotspot-fact" 
+          data-position="0m 0.3m -0.5m" 
+          data-normal="0m 0m -1m"
         >
           <div className="card-header">Did you know?</div>
           <p className="card-text">
