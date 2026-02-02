@@ -1,11 +1,11 @@
 /* --- IMPORT FANCY FONTS --- */
-@import url('https://fonts.googleapis.com/css2?family=Lobster&family=Poppins:wght@500;800&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Lobster&family=Poppins:wght@500;800;900&display=swap');
 
 /* --- AR Container --- */
 .ar-container {
   width: 100vw;
   height: 100vh;
-  background-color: #333; /* Dark grey preview background */
+  background-color: #333; 
   display: flex;
   justify-content: center;
   align-items: center;
@@ -30,7 +30,7 @@
   box-shadow: 0 4px 10px rgba(0,0,0,0.3);
 }
 
-/* --- HOTSPOTS COMMON RESET --- */
+/* --- HOTSPOTS RESET --- */
 button[slot^="hotspot"] {
   display: block;
   border: none;
@@ -43,7 +43,9 @@ button[slot^="hotspot"] > * {
   pointer-events: auto;
 }
 
-/* --- 1. THE NAME LABEL (Top Center - FANCY) --- */
+/* --- 1. THE NAME LABEL (Keep as Sticker?) --- */
+/* You didn't ask to change the Name, but I matched the style for consistency.
+   If you want the box back for the Name only, let me know. */
 .hotspot-label {
   display: flex;
   flex-direction: column;
@@ -52,86 +54,91 @@ button[slot^="hotspot"] > * {
 }
 
 .label-text {
-  /* FANCY FONT */
   font-family: 'Lobster', cursive; 
-  font-size: 32px;  /* Very Large */
-  color: #000000;   /* Black Text */
+  font-size: 36px; /* Larger */
+  color: #000;
   
-  /* THE WHITE BORDER TRICK (Text Stroke) */
+  /* NO BACKGROUND */
+  background: transparent;
+  border: none;
+  box-shadow: none;
+  
+  /* Thick White Outline so it pops */
   text-shadow: 
-    2px 2px 0 #fff, 
+    3px 3px 0 #fff, 
    -1px -1px 0 #fff,  
     1px -1px 0 #fff,
    -1px 1px 0 #fff,
     1px 1px 0 #fff;
-  
-  /* Light background just to be safe */
-  background: rgba(255, 255, 255, 0.4); 
-  backdrop-filter: blur(4px);
-  padding: 4px 20px;
-  border-radius: 12px;
-  border: 2px solid #fff;
-  box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+    
+  padding: 0;
+  margin-bottom: 5px;
 }
 
 .line-anchor {
   width: 3px;
   height: 40px;
   background-color: #fff;
-  border: 1px solid #000; /* Black outline on the line too */
-  margin-top: -2px;
+  border: 1px solid #000;
+  margin-top: 0;
 }
 
-/* --- 2. THE INFO CARDS (Ingredients & Fact) --- */
+/* --- 2. THE FLOATING INFO TEXT (Ingredients & Fact) --- */
 .hotspot-card {
-  /* FROSTED WHITE GLASS */
-  background: rgba(255, 255, 255, 0.85);
-  backdrop-filter: blur(8px);
+  /* TRANSPARENT - Floating Text Only */
+  background: transparent;
+  border: none;
+  box-shadow: none;
+  backdrop-filter: none;
   
-  padding: 16px;
-  border-radius: 16px;
+  padding: 0;
   width: 220px;
   text-align: left;
+}
+
+/* SHARED TEXT STROKE STYLE (The "Sticker" Look) */
+.card-header, .card-list, .card-text {
+  color: #000; /* Black Text */
   
-  /* Black Border */
-  border: 2px solid #000;
-  box-shadow: 5px 5px 0px rgba(0,0,0,1); /* Retro "Pop" Shadow */
-  
-  transition: opacity 0.3s;
+  /* The White Outline - Critical for visibility without background */
+  text-shadow: 
+    2px 2px 0 #fff, 
+   -1px -1px 0 #fff,  
+    1px -1px 0 #fff,
+   -1px 1px 0 #fff,
+    1px 1px 0 #fff;
 }
 
 .card-header {
   font-family: 'Poppins', sans-serif;
-  font-weight: 900; /* Extra Bold */
+  font-weight: 900; 
   text-transform: uppercase;
-  font-size: 16px;
-  margin-bottom: 8px;
-  border-bottom: 2px solid #000;
-  padding-bottom: 4px;
-  
-  /* Black Text */
-  color: #000;
+  font-size: 20px; /* Larger Header */
+  margin-bottom: 4px;
+  border-bottom: 3px solid #000; /* Keep the underline, it looks cool floating */
+  display: inline-block; /* Underline only text width */
+  padding-bottom: 2px;
+  box-shadow: 0 2px 0 #fff; /* White outline for the underline */
 }
 
 .card-list {
   padding-left: 20px;
   margin: 0;
-  font-size: 14px;
-  font-weight: 600; /* Semi-bold */
-  color: #000;      /* Black Text */
+  font-size: 16px;
+  font-weight: 800; /* Extra Bold */
   line-height: 1.4;
 }
 
-/* Custom Bullet Points */
 .card-list li::marker {
   color: #000;
-  font-weight: bold;
+  font-size: 18px;
+  /* Sadly, text-shadow doesn't always apply to bullets in all browsers,
+     but the text next to it will be readable. */
 }
 
 .card-text {
   margin: 0;
-  font-size: 14px;
-  font-weight: 600;
-  color: #000;
+  font-size: 16px;
+  font-weight: 800;
   line-height: 1.3;
 }
