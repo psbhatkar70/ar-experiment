@@ -1,3 +1,4 @@
+
 /* --- IMPORT FANCY FONTS --- */
 @import url('https://fonts.googleapis.com/css2?family=Lobster&family=Poppins:wght@500;800;900&display=swap');
 
@@ -43,9 +44,7 @@ button[slot^="hotspot"] > * {
   pointer-events: auto;
 }
 
-/* --- 1. THE NAME LABEL (Keep as Sticker?) --- */
-/* You didn't ask to change the Name, but I matched the style for consistency.
-   If you want the box back for the Name only, let me know. */
+/* --- 1. THE NAME LABEL (Top Center) --- */
 .hotspot-label {
   display: flex;
   flex-direction: column;
@@ -55,24 +54,21 @@ button[slot^="hotspot"] > * {
 
 .label-text {
   font-family: 'Lobster', cursive; 
-  font-size: 36px; /* Larger */
+  font-size: 36px;
   color: #000;
   
   /* NO BACKGROUND */
   background: transparent;
   border: none;
-  box-shadow: none;
+  padding: 0;
   
-  /* Thick White Outline so it pops */
+  /* STICKER TEXT EFFECT */
   text-shadow: 
     3px 3px 0 #fff, 
    -1px -1px 0 #fff,  
     1px -1px 0 #fff,
    -1px 1px 0 #fff,
     1px 1px 0 #fff;
-    
-  padding: 0;
-  margin-bottom: 5px;
 }
 
 .line-anchor {
@@ -83,24 +79,38 @@ button[slot^="hotspot"] > * {
   margin-top: 0;
 }
 
-/* --- 2. THE FLOATING INFO TEXT (Ingredients & Fact) --- */
+/* --- 2. THE INFO CARDS (Ingredients & Fact) --- */
 .hotspot-card {
-  /* TRANSPARENT - Floating Text Only */
+  /* LAYOUT FIX: Keep width/padding so it occupies space correctly */
+  width: 220px;
+  padding: 16px;
+  text-align: left;
+  
+  /* STYLE FIX: Remove visible box */
   background: transparent;
   border: none;
   box-shadow: none;
   backdrop-filter: none;
-  
-  padding: 0;
-  width: 220px;
-  text-align: left;
 }
 
-/* SHARED TEXT STROKE STYLE (The "Sticker" Look) */
-.card-header, .card-list, .card-text {
-  color: #000; /* Black Text */
+/* --- TEXT STYLES (Floating Sticker Look) --- */
+
+.card-header {
+  font-family: 'Poppins', sans-serif;
+  font-weight: 900; 
+  text-transform: uppercase;
+  font-size: 20px;
+  margin-bottom: 8px;
   
-  /* The White Outline - Critical for visibility without background */
+  /* Black Text */
+  color: #000;
+  
+  /* Underline Style */
+  border-bottom: 3px solid #000;
+  display: inline-block;
+  box-shadow: 0 2px 0 #fff; /* White outline for the underline */
+  
+  /* White Outline */
   text-shadow: 
     2px 2px 0 #fff, 
    -1px -1px 0 #fff,  
@@ -109,36 +119,42 @@ button[slot^="hotspot"] > * {
     1px 1px 0 #fff;
 }
 
-.card-header {
-  font-family: 'Poppins', sans-serif;
-  font-weight: 900; 
-  text-transform: uppercase;
-  font-size: 20px; /* Larger Header */
-  margin-bottom: 4px;
-  border-bottom: 3px solid #000; /* Keep the underline, it looks cool floating */
-  display: inline-block; /* Underline only text width */
-  padding-bottom: 2px;
-  box-shadow: 0 2px 0 #fff; /* White outline for the underline */
-}
-
 .card-list {
   padding-left: 20px;
   margin: 0;
   font-size: 16px;
-  font-weight: 800; /* Extra Bold */
+  font-weight: 800;
+  color: #000;
   line-height: 1.4;
+  
+  /* White Outline */
+  text-shadow: 
+    2px 2px 0 #fff, 
+   -1px -1px 0 #fff,  
+    1px -1px 0 #fff,
+   -1px 1px 0 #fff,
+    1px 1px 0 #fff;
 }
 
 .card-list li::marker {
   color: #000;
   font-size: 18px;
-  /* Sadly, text-shadow doesn't always apply to bullets in all browsers,
-     but the text next to it will be readable. */
+  /* Note: text-shadow often doesn't apply to markers, 
+     but the text itself will be readable. */
 }
 
 .card-text {
   margin: 0;
   font-size: 16px;
   font-weight: 800;
+  color: #000;
   line-height: 1.3;
+  
+  /* White Outline */
+  text-shadow: 
+    2px 2px 0 #fff, 
+   -1px -1px 0 #fff,  
+    1px -1px 0 #fff,
+   -1px 1px 0 #fff,
+    1px 1px 0 #fff;
 }
