@@ -4,7 +4,8 @@ import '@google/model-viewer';
 // --- CONSTANTS ---
 const MODEL_SRC = "/models/cake.glb";
 const ALT_TEXT = "A 3D model of a cake";
-const INITIAL_ORBIT = "45deg 55deg 2.5m";
+// Camera starts looking from slightly right (45deg) and above (55deg)
+const INITIAL_ORBIT = "45deg 55deg 2.5m"; 
 const FIELD_OF_VIEW = "30deg";
 
 function App() {
@@ -35,24 +36,24 @@ function App() {
 
         style={{ width: '100%', height: '100%' }} 
       >
-        {/* --- HOTSPOT 1: NAME (BEHIND & ELEVATED) --- */}
-        {/* X=0 (Center), Y=0.45m (High Up), Z=-0.4m (Behind the cake) */}
+        {/* --- HOTSPOT 1: NAME (High & Behind) --- */}
+        {/* Y increased to 0.6m to be clearly above the cake */}
         <button 
           className="hotspot-label" 
           slot="hotspot-name" 
-          data-position="0m 0.45m -0.4m" 
+          data-position="0m 0.6m -0.4m" 
           data-normal="0m 0m 1m" 
         >
           <div className="label-text">Hello Deveksh is Gagan</div>
           <div className="line-anchor"></div>
         </button>
 
-        {/* --- HOTSPOT 2: INGREDIENTS (RIGHT SIDE) --- */}
-        {/* X=0.5m (Right), Y=0.2m (Low), Z=0m (Center depth) */}
+        {/* --- HOTSPOT 2: INGREDIENTS (Right & Elevated) --- */}
+        {/* Y increased to 0.5m (was 0.2m) */}
         <button 
           className="hotspot-card" 
           slot="hotspot-ingredients" 
-          data-position="0.5m 0.2m 0m" 
+          data-position="0.55m 0.5m 0m" 
           data-normal="1m 0m 0m"
         >
           <div className="card-header">Ingredients</div>
@@ -64,12 +65,12 @@ function App() {
           </ul>
         </button>
 
-        {/* --- HOTSPOT 3: FACT (LEFT SIDE) --- */}
-        {/* X=-0.5m (Left), Y=0.2m (Low), Z=0m (Center depth) */}
+        {/* --- HOTSPOT 3: FACT (Left & Elevated) --- */}
+        {/* Y increased to 0.5m (was 0.2m) */}
         <button 
           className="hotspot-card" 
           slot="hotspot-fact" 
-          data-position="-0.5m 0.2m 0m" 
+          data-position="-0.55m 0.5m 0m" 
           data-normal="-1m 0m 0m"
         >
           <div className="card-header">Did you know?</div>
