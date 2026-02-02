@@ -45,7 +45,6 @@ function App() {
           data-normal="0m 0m 1m" 
         >
           <div className="label-text">Cheese Cake</div>
-          <div className="line-anchor"></div>
         </button>
 
         {/* --- HOTSPOT 2: INGREDIENTS (Right & Elevated) --- */}
