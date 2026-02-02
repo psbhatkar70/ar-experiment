@@ -4,18 +4,13 @@ import '@google/model-viewer';
 // --- CONSTANTS ---
 const MODEL_SRC = "/models/cake.glb";
 const ALT_TEXT = "A 3D model of a cake";
-
-// Initial Camera Position:
-// 45deg (Horizontal angle), 55deg (Vertical angle), 2.5m (Distance)
 const INITIAL_ORBIT = "45deg 55deg 2.5m";
-
-// Field of View: Wider lens to see the whole item comfortably
 const FIELD_OF_VIEW = "30deg";
 
 function App() {
   return (
     <div className="ar-container">
-      {/* @ts-ignore: Custom Web Component types logic */}
+      {/* @ts-ignore */}
       <model-viewer 
         src={MODEL_SRC}
         alt={ALT_TEXT}
@@ -23,29 +18,64 @@ function App() {
         // --- AR SETUP ---
         ar
         ar-modes="webxr scene-viewer quick-look" 
-        ar-scale="fixed"      // Enforces "Actual Size" (1:1 with real world)
-        ar-placement="floor"  // Sticks to the table
+        ar-scale="fixed"
+        ar-placement="floor"
         
-        // --- INTERACTION SETTINGS (Turntable Mode) ---
-        camera-controls       // ENABLED: Allows user to touch and interact
-        disable-pan           // ENABLED: Prevents sliding/moving the object
-        disable-zoom          // ENABLED: Prevents changing the size
-        interaction-prompt="auto" // Shows the "Hand" hint so they know they can swipe
+        // --- INTERACTION ---
+        camera-controls
+        disable-pan
+        disable-zoom
+        interaction-prompt="auto"
         
-        // --- CAMERA CONSTRAINTS ---
-        // Sets the starting angle
+        // --- CAMERA ---
         camera-orbit={INITIAL_ORBIT}
         field-of-view={FIELD_OF_VIEW}
-        
-        // Prevents the user from looking "under" the table.
-        // Format: [min-theta] [min-phi] [min-radius]
-        // Phi 0deg = Top down. Phi 90deg = Horizon.
         min-camera-orbit="auto 0deg auto"
         max-camera-orbit="auto 85deg auto"
 
-        // Style: Ensure the component itself fits the container
         style={{ width: '100%', height: '100%' }} 
       >
+        {/* --- HOTSPOT 1: TOP (40cm Up) --- */}
+        <button 
+          className="hotspot-label" 
+          slot="hotspot-top" 
+          data-position="0m 0.4m 0m" 
+          data-normal="0m 1m 0m"
+        >
+          <div className="label-text">Hello Deveksh is Gagan</div>
+          <div className="line-anchor"></div>
+        </button>
+
+        {/* --- HOTSPOT 2: RIGHT (3 o'clock - Ingredients) --- */}
+        <button 
+          className="hotspot-card" 
+          slot="hotspot-right" 
+          data-position="0.35m 0.15m 0m" 
+          data-normal="1m 0m 0m"
+        >
+          <div className="card-header">Ingredients</div>
+          <ul className="card-list">
+            <li>Dark Chocolate</li>
+            <li>Heavy Cream</li>
+            <li>Vanilla Bean</li>
+            <li>Sea Salt</li>
+          </ul>
+        </button>
+
+        {/* --- HOTSPOT 3: LEFT (9 o'clock - Random Fact) --- */}
+        <button 
+          className="hotspot-card" 
+          slot="hotspot-left" 
+          data-position="-0.35m 0.15m 0m" 
+          data-normal="-1m 0m 0m"
+        >
+          <div className="card-header">Did you know?</div>
+          <p className="card-text">
+            The world's most expensive cake cost $75 million and was loaded with 4,000 diamonds.
+          </p>
+        </button>
+
+        {/* AR Button */}
         <button slot="ar-button" className="ar-button">
           See in AR
         </button>
