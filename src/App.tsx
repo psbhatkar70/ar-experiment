@@ -44,7 +44,7 @@ function App() {
           data-position="0m 0.6m -0.4m" 
           data-normal="0m 0m 1m" 
         >
-          <div className="label-text">Hello Deveksh is Gagan</div>
+          <div className="label-text">Cheese Cake</div>
           <div className="line-anchor"></div>
         </button>
 
