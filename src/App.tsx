@@ -12,7 +12,6 @@ const MODEL_SRC = "/models/cake.glb";
 
 function App() {
   const modelRef = useRef<ModelViewerElement>(null);
-  const [isARMode, setIsARMode] = useState(false); // State to track AR status
   
   // Track rotation angle (Y-axis)
   const currentYRotation = useRef(0);
