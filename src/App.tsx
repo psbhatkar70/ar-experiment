@@ -1,4 +1,4 @@
-import  { useRef } from 'react';
+import  { useEffect, useRef } from 'react';
 import './App.css';
 import '@google/model-viewer';
 
@@ -13,46 +13,65 @@ const MODEL_SRC = "/models/cake.glb";
 function App() {
   const modelRef = useRef<ModelViewerElement>(null);
   
-  // Track rotation angle (Y-axis)
-  const currentYRotation = useRef(0);
+  // 1. Target Rotation: Where we WANT to go
+  const targetRotation = useRef(0);
+  
+  // 2. Current Rotation: Where we ARE right now
+  const currentRotation = useRef(0);
+  
+  // 3. Animation Frame ID: To cancel loop if needed
+  const requestRef = useRef<number | null>(null);
 
-  // useEffect(() => {
-  //   const viewer = modelRef.current;
-  //   if (!viewer) return;
+  // --- THE SMOOTHING ENGINE ---
+  const animateRotation = () => {
+    // A. Calculate the distance to the target
+    const diff = targetRotation.current - currentRotation.current;
 
-    // EVENT LISTENER: Detect when user enters/exits AR
-    // const handleARStatus = (event: any) => {
-    //   // 'session-started' means we are in the Camera View (WebXR)
-    //   if (event.detail.status === 'session-started') {
-    //     setIsARMode(true);
-    //   } else {
-    //     setIsARMode(false);
-    //   }
-    // };
+    // B. If we are close enough, stop (save battery)
+    if (Math.abs(diff) < 0.1) {
+      currentRotation.current = targetRotation.current;
+      updateOrientation(currentRotation.current);
+      return; 
+    }
 
-    // viewer.addEventListener('ar-status', handleARStatus);
+    // C. Move 10% of the way there (Easing Factor)
+    // Changing 0.1 to 0.05 makes it slower/smoother. 0.2 makes it snappier.
+    const ease = 0.1; 
+    currentRotation.current += diff * ease;
 
-    // Cleanup listener on unmount
-  //   return () => {
-  //     viewer.removeEventListener('ar-status', handleARStatus);
-  //   };
-  // }, []);
+    // D. Apply the update
+    updateOrientation(currentRotation.current);
 
-  const handleCakeRotate = (direction: number) => {
-    const viewer = modelRef.current;
-    if (!viewer) return;
-
-    // Rotate 25 degrees per click
-    const step = 25; 
-    currentYRotation.current += (direction * step);
-
-    // --- THE FIX ---
-    // Previously we did: `0deg ${currentYRotation.current}deg 0deg` (Y-Axis)
-    // Since your model is Z-Up (Blender style), we must rotate the Z-Axis (3rd slot).
-    
-    viewer.orientation = `0deg 0deg ${currentYRotation.current}deg`;
+    // E. Loop
+    requestRef.current = requestAnimationFrame(animateRotation);
   };
 
+  // Helper function to keep the string formatting clean
+  const updateOrientation = (angle: number) => {
+    if (modelRef.current) {
+      // Rotating Z-axis as per your previous success
+      modelRef.current.orientation = `0deg 0deg ${angle}deg`;
+    }
+  };
+
+  const handleCakeRotate = (direction: number) => {
+    const step = 45; // 45 degrees step
+    
+    // 1. Update the TARGET, not the current value
+    targetRotation.current += (direction * step);
+
+    // 2. Start the animation loop if it's not running
+    // (cancel previous to avoid double-speed bugs)
+    if (requestRef.current) cancelAnimationFrame(requestRef.current);
+    requestRef.current = requestAnimationFrame(animateRotation);
+  };
+
+  // Cleanup on unmount to prevent memory leaks
+  useEffect(() => {
+    return () => {
+      if (requestRef.current) cancelAnimationFrame(requestRef.current);
+    };
+  }, []);
   return (
     <div className="ar-container">
       {/* @ts-ignore */}
