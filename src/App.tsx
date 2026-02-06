@@ -23,37 +23,34 @@ const MODEL_SRC = "/models/cake.glb";
 function App() {
   const modelRef = useRef<ModelViewerElement>(null);
   
-  // Refs for the Hotspot Buttons (for direct DOM manipulation)
+  // --- 1. REFS FOR BUTTONS ---
+  // We need direct access to the buttons to update them fast
   const nameRef = useRef<HTMLButtonElement>(null);
   const ingRef = useRef<HTMLButtonElement>(null);
   const factRef = useRef<HTMLButtonElement>(null);
 
-  // Rotation State
   const targetRotation = useRef(0);
   const currentRotation = useRef(0);
   const requestRef = useRef<number | null>(null);
 
-  // --- MATH HELPER ---
-  // Rotates a point (x, y) around center (0,0)
-  const rotateCoordinate = (x: number, y: number, angleDeg: number) => {
-    // Convert to Radians
+  // --- 2. THE MATH HELPER ---
+  // Calculates where a point (x, z) should be after rotating by 'angleDeg'
+  const rotateCoordinate = (x: number, z: number, angleDeg: number) => {
+    // Convert degrees to radians
     const rad = (angleDeg * Math.PI) / 180;
-    const cos = Math.cos(rad);
-    const sin = Math.sin(rad);
-
-    // 2D Rotation Matrix logic
-    // Since we are rotating the Z-axis, the "floor" is the X/Y plane.
-    const newX = x * cos - y * sin;
-    const newY = x * sin + y * cos;
     
-    return { x: newX, y: newY };
+    // Standard Rotation Matrix
+    // We rotate around the origin (0,0)
+    // Note: If they spin the wrong way, change '-' to '+' in the sin/cos terms
+    const newX = x * Math.cos(rad) - z * Math.sin(rad);
+    const newZ = x * Math.sin(rad) + z * Math.cos(rad);
+    
+    return { x: newX, z: newZ };
   };
 
-  // --- ANIMATION LOOP ---
   const animateRotation = () => {
     const diff = targetRotation.current - currentRotation.current;
 
-    // Stop if the movement is tiny (save battery)
     if (Math.abs(diff) < 0.1) {
       currentRotation.current = targetRotation.current;
       updateScene(currentRotation.current);
@@ -61,7 +58,6 @@ function App() {
       return; 
     }
 
-    // Easing factor (0.1 = smooth, 1.0 = instant)
     const ease = 0.1; 
     currentRotation.current += diff * ease;
 
@@ -69,30 +65,28 @@ function App() {
     requestRef.current = requestAnimationFrame(animateRotation);
   };
 
-  // --- SCENE UPDATER ---
+  // --- 3. THE SCENE UPDATER ---
   const updateScene = (angle: number) => {
-    // 1. Rotate the Cake (Z-Axis based on your finding)
+    // A. Rotate the Cake Mesh (Z-Axis, as per your setup)
     if (modelRef.current) {
       modelRef.current.orientation = `0deg 0deg ${angle}deg`;
     }
 
-    // 2. Rotate the Hotspots
+    // B. Rotate the Hotspots (Orbit around Scene Y-Axis)
     const refs = [nameRef, ingRef, factRef];
     
-    // Iterate through config to calculate new positions
     HOTSPOTS_CONFIG.forEach((config, index) => {
       const element = refs[index].current;
       if (!element) return;
 
-      // Calculate new X and Y based on the rotation angle
-      // We assume Z (height) stays constant
-      const { x: newX, y: newY } = rotateCoordinate(config.x, config.y, angle);
+      // Calculate new floor position (X and Z)
+      // We pass the NEGATIVE angle if the directions are opposite. 
+      // Try 'angle' first. If hotspots fly left while cake spins right, use '-angle'.
+      const { x: newX, z: newZ } = rotateCoordinate(config.x, config.z, -angle);
 
-      // Apply to the DOM element
-      // Note: We used X and Y for the rotation plane. 
-      // If the hotspots move "up and down" instead of "around", 
-      // swap ${newY} with ${config.z} in the string below.
-      element.dataset.position = `${newX}m ${newY}m ${config.z}m`;
+      // Update the DOM. 
+      // Format: "X Y Z" (Y is constant height)
+      element.dataset.position = `${newX}m ${config.y}m ${newZ}m`;
     });
   };
 
@@ -104,7 +98,6 @@ function App() {
     requestRef.current = requestAnimationFrame(animateRotation);
   };
 
-  // Cleanup
   useEffect(() => {
     return () => {
       if (requestRef.current) cancelAnimationFrame(requestRef.current);
@@ -127,10 +120,10 @@ function App() {
         orientation="0deg 0deg 0deg"
         style={{ width: '100%', height: '100%' }} 
       >
-        
-        {/* BUTTONS WITH REFS */}
+
+        {/* --- CONNECT REFS TO BUTTONS --- */}
         <button 
-          ref={nameRef}
+          ref={nameRef}  // <--- ATTACH REF
           className="hotspot-label" 
           slot="hotspot-name" 
           data-position="0m 0.6m -0.4m" 
@@ -140,7 +133,7 @@ function App() {
         </button>
 
         <button 
-          ref={ingRef}
+          ref={ingRef} // <--- ATTACH REF
           className="hotspot-card" 
           slot="hotspot-ingredients" 
           data-position="0.55m 0.5m 0m" 
@@ -154,34 +147,27 @@ function App() {
         </button>
 
         <button 
-          ref={factRef}
+          ref={factRef} // <--- ATTACH REF
           className="hotspot-card" 
           slot="hotspot-fact" 
           data-position="-0.55m 0.5m 0m" 
           data-normal="-1m 0m 0m"
         >
           <div className="card-header">Did you know?</div>
-          <p className="card-text">Expensive diamonds.</p>
+          <p className="card-text">Expensive cake.</p>
         </button>
 
+        {/* ... Rest of your UI ... */}
         <button slot="ar-button" className="ar-button">View in your space</button>
-
+        
+        {/* Your Buttons */}
         <div className="ar-controls-overlay">
-          <button 
-            className="control-btn" 
-            onClick={(e) => { e.stopPropagation(); handleCakeRotate(-1); }} 
-          >
-            <svg viewBox="0 0 24 24"><path fill="currentColor" d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/></svg>
-          </button>
-          
-          <div className="control-label">ROTATE CAKE</div>
-
-          <button 
-            className="control-btn" 
-            onClick={(e) => { e.stopPropagation(); handleCakeRotate(1); }}
-          >
-            <svg viewBox="0 0 24 24"><path fill="currentColor" d="M12 4l-1.41 1.41L16.17 11H4v2h12.17l-5.58 5.59L12 20l8-8z"/></svg>
-          </button>
+           <button className="control-btn" onClick={(e) => { e.stopPropagation(); handleCakeRotate(-1); }}>
+             <svg viewBox="0 0 24 24"><path fill="currentColor" d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/></svg>
+           </button>
+           <button className="control-btn" onClick={(e) => { e.stopPropagation(); handleCakeRotate(1); }}>
+             <svg viewBox="0 0 24 24"><path fill="currentColor" d="M12 4l-1.41 1.41L16.17 11H4v2h12.17l-5.58 5.59L12 20l8-8z"/></svg>
+           </button>
         </div>
 
       {/* @ts-ignore */}
