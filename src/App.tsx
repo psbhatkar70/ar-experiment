@@ -42,13 +42,15 @@ function App() {
     const viewer = modelRef.current;
     if (!viewer) return;
 
-    // Rotate 45 degrees per click
-    const step = 45; 
+    // Rotate 25 degrees per click
+    const step = 25; 
     currentYRotation.current += (direction * step);
 
-    // Apply rotation to Y-AXIS (Middle value)
-    // "Roll(X) Pitch(Y) Yaw(Z)" -> We want Y for "Spinning on table"
-    viewer.orientation = `0deg ${currentYRotation.current}deg 0deg`;
+    // --- THE FIX ---
+    // Previously we did: `0deg ${currentYRotation.current}deg 0deg` (Y-Axis)
+    // Since your model is Z-Up (Blender style), we must rotate the Z-Axis (3rd slot).
+    
+    viewer.orientation = `0deg 0deg ${currentYRotation.current}deg`;
   };
 
   return (
