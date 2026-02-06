@@ -14,7 +14,7 @@ interface ModelViewerElement extends HTMLElement {
 const HOTSPOTS_CONFIG = [
   { id: 'name',        x: 0,     y: 0.6,  z: -0.4 }, 
   { id: 'ingredients', x: 0.55,  y: 0.5,  z: 0    }, 
-  { id: 'fact',        x: -0.55, y: 0.5,  z: 0    }  
+  { id: 'fact',        x: -0.45, y: 0.5,  z: 0    }  
 ];
 
 const MODEL_SRC = "/models/cake.glb";
@@ -58,31 +58,35 @@ function App() {
   };
 
   const updateScene = (angle: number) => {
-    // A. Rotate Cake (Z-Axis due to Blender export)
+    // 1. Rotate the Cake (Z-Axis)
     if (modelRef.current) {
       modelRef.current.orientation = `0deg 0deg ${angle}deg`;
     }
 
-    // B. Rotate Hotspots
+    // 2. Rotate the Hotspots
     const refs = [nameRef, ingRef, factRef];
     
-    // DEBUG: Check your console. If this says "Missing Ref", the JSX is wrong.
-    if (!refs[0].current) console.warn("DEBUG: Button Refs are null! Check JSX.");
+    // DEBUG: Only runs once to prove connection. Open Console (F12) to see this.
+    if (angle > 0 && angle < 1) console.log("Animation Loop Running: ", angle);
 
     HOTSPOTS_CONFIG.forEach((config, index) => {
       const element = refs[index].current;
-      if (!element) return; // Skip if ref is broken
+      
+      // SAFETY CHECK: If ref is null, skip
+      if (!element) return; 
 
-      // Rotate the coordinate - Note the MINUS angle to sync with cake direction
+      // Math: Rotate around the center
       const { x: newX, z: newZ } = rotateCoordinate(config.x, config.z, -angle);
 
-      // Apply new position to DOM
-      element.dataset.position = `${newX}m ${config.y}m ${newZ}m`;
+      // --- THE CRITICAL FIX ---
+      // DONT USE: element.dataset.position = ... (Ignored by model-viewer)
+      // USE THIS: setAttribute (Forces update)
+      element.setAttribute('data-position', `${newX}m ${config.y}m ${newZ}m`);
     });
   };
 
   const handleCakeRotate = (direction: number) => {
-    const step = 45; 
+    const step = 25; 
     targetRotation.current += (direction * step);
     if (requestRef.current !== null) cancelAnimationFrame(requestRef.current);
     requestRef.current = requestAnimationFrame(animateRotation);
@@ -142,7 +146,7 @@ function App() {
           ref={factRef} 
           className="hotspot-card" 
           slot="hotspot-fact" 
-          data-position="-0.55m 0.5m 0m" 
+          data-position="-0.45m 0.5m 0m" 
           data-normal="-1m 0m 0m"
         >
           <div className="card-header">Did you know?</div>
