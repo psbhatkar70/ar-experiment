@@ -119,7 +119,7 @@ function App() {
 
         {/* --- AR-ONLY CONTROLS --- */}
         {/* logic: Only render this div if isARMode is TRUE */}
-        {isARMode && (
+        
           <div className="ar-controls-overlay">
             <button 
               className="control-btn" 
@@ -143,7 +143,7 @@ function App() {
               <svg viewBox="0 0 24 24"><path fill="currentColor" d="M12 4l-1.41 1.41L16.17 11H4v2h12.17l-5.58 5.59L12 20l8-8z"/></svg>
             </button>
           </div>
-        )}
+      
 
       {/* @ts-ignore */}
       </model-viewer>
