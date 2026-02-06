@@ -15,7 +15,7 @@ interface ModelViewerElement extends HTMLElement {
 const HOTSPOTS_CONFIG = [
   { id: 'name',        x: 0,     y: 0.6,  z: -0.4 }, // Cheese Cake
   { id: 'ingredients', x: 0.55,  y: 0.5,  z: 0    }, // Ingredients
-  { id: 'fact',        x: -0.55, y: 0.5,  z: 0    }  // Fact
+  { id: 'fact',        x: -0.45, y: 0.5,  z: 0    }  // Fact
 ];
 
 const MODEL_SRC = "/models/cake.glb";
@@ -82,7 +82,7 @@ function App() {
       // Calculate new floor position (X and Z)
       // We pass the NEGATIVE angle if the directions are opposite. 
       // Try 'angle' first. If hotspots fly left while cake spins right, use '-angle'.
-      const { x: newX, z: newZ } = rotateCoordinate(config.x, config.z, -angle);
+      const { x: newX, z: newZ } = rotateCoordinate(config.x, config.z, angle);
 
       // Update the DOM. 
       // Format: "X Y Z" (Y is constant height)
@@ -150,7 +150,7 @@ function App() {
           ref={factRef} // <--- ATTACH REF
           className="hotspot-card" 
           slot="hotspot-fact" 
-          data-position="-0.55m 0.5m 0m" 
+          data-position="-0.45m 0.5m 0m" 
           data-normal="-1m 0m 0m"
         >
           <div className="card-header">Did you know?</div>
