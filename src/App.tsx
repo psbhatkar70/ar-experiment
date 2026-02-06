@@ -18,13 +18,10 @@ function App() {
   // 2. Explicitly type the 'direction' parameter
   const handleTurntableRotate = (direction: number) => {
     const viewer = modelRef.current;
-    
-    // Guard clause: TS now knows 'viewer' is ModelViewerElement or null
     if (!viewer) return;
 
-    // TS now knows this method exists because of our Interface above
     const orbit = viewer.getCameraOrbit();
-    
+    // 30 degrees step for a noticeable spin
     const step = (30 * Math.PI) / 180; 
     const newTheta = orbit.theta + (direction * step);
 
@@ -104,27 +101,21 @@ function App() {
 
         {/* --- TURNTABLE CONTROLS --- */}
         <div className="turntable-controls">
-          <button 
-            className="control-btn" 
-            onClick={() => handleTurntableRotate(-1)} 
-            aria-label="Spin Left"
-          >
-            {/* Rotate Left Icon */}
-            <svg viewBox="0 0 24 24" width="24" height="24"><path fill="currentColor" d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm5 11h-4v4h-2v-4H7v-2h4V7h2v4h4v2z"/></svg>
-            <span style={{marginLeft: '5px', fontWeight: 'bold'}}>←</span>
-          </button>
-          
-          <div className="control-divider"></div>
+            <button 
+              className="control-btn" 
+              onClick={() => handleTurntableRotate(-1)} 
+              aria-label="Rotate Left"
+            >
+              <svg viewBox="0 0 24 24"><path fill="currentColor" d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/></svg>
+            </button>
 
-          <button 
-            className="control-btn" 
-            onClick={() => handleTurntableRotate(1)}
-            aria-label="Spin Right"
-          >
-            <span style={{marginRight: '5px', fontWeight: 'bold'}}>→</span>
-            {/* Rotate Right Icon */}
-            <svg viewBox="0 0 24 24" width="24" height="24"><path fill="currentColor" d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 14H9v-2h2v-4H9V8h2v8h2v2h-2v2z"/></svg>
-          </button>
+            <button 
+              className="control-btn" 
+              onClick={() => handleTurntableRotate(1)}
+              aria-label="Rotate Right"
+            >
+              <svg viewBox="0 0 24 24"><path fill="currentColor" d="M12 4l-1.41 1.41L16.17 11H4v2h12.17l-5.58 5.59L12 20l8-8z"/></svg>
+            </button>
         </div>
 
         <button slot="ar-button" className="ar-button">

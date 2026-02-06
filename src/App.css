@@ -140,3 +140,61 @@ model-viewer {
   box-shadow: 0 4px 12px rgba(0,0,0,0.2);
   z-index: 100;
 }
+
+/* CONTAINER FOR THE BUTTONS */
+.turntable-controls {
+  position: absolute;
+  /* Dock to bottom, but above the "See in AR" button (usually ~60px high) */
+  bottom: 100px; 
+  left: 0;
+  width: 100%;
+  
+  display: flex;
+  justify-content: center; /* Center horizontally */
+  align-items: center;
+  gap: 32px; /* Space between Left and Right buttons */
+  
+  pointer-events: none; /* Let clicks pass through the empty space */
+  z-index: 999; /* Force it to top layer */
+}
+
+/* THE BUTTONS THEMSELVES */
+.control-btn {
+  /* Re-enable clicks on the buttons themselves */
+  pointer-events: auto; 
+  
+  /* SIZING: Big click targets for thumbs */
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  
+  /* GLASSMORPHISM STYLE */
+  background: rgba(255, 255, 255, 0.9);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.6);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+  
+  /* LAYOUT */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  
+  /* INTERACTION */
+  cursor: pointer;
+  border: none;
+  transition: transform 0.1s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* TOUCH FEEDBACK */
+.control-btn:active {
+  transform: scale(0.90);
+  background: rgba(255, 255, 255, 1);
+}
+
+/* ICONS inside buttons */
+.control-btn svg {
+  width: 32px;
+  height: 32px;
+  color: #333; /* Dark icon color for contrast */
+}
