@@ -1,144 +1,142 @@
 :root {
-  /* Design Tokens - Easy to tweak later */
-  --ar-glass-bg: rgba(255, 255, 255, 0.85);
-  --ar-glass-border: rgba(255, 255, 255, 0.4);
+  --ar-glass-bg: rgba(255, 255, 255, 0.9);
+  --ar-glass-border: rgba(255, 255, 255, 0.6);
   --ar-text-primary: #1a1a1a;
-  --ar-text-secondary: #555;
-  --ar-accent: #007bff; /* Example blue, change to your brand */
   --ar-shadow: 0 4px 24px rgba(0, 0, 0, 0.15);
-  --ar-radius: 12px;
 }
 
-/* 1. The Container */
-/* Ensure the viewer takes strictly 100% of the viewport without scrolling */
+/* CONTAINER SETUP */
 .ar-container {
+  /* Absolute positioning guarantees it sticks to the viewport corners */
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  
+  /* Use dvh (dynamic viewport height) for mobile browsers */
+  height: 100dvh; 
   width: 100vw;
-  height: 100vh;
-  background-color: #f0f0f0; /* Fallback color before model loads */
-  overflow: hidden;
-  position: relative;
+  
+  background-color: #f0f0f0;
+  z-index: 1;
 }
 
-/* 2. Resetting Button Defaults */
-/* <model-viewer> uses buttons for hotspots, but browsers style them ugly by default. */
+/* MODEL VIEWER CANVAS */
+/* This ensures the web component actually fills the container */
+model-viewer {
+  width: 100%;
+  height: 100%;
+  
+  /* Remove the default outline focus ring */
+  --poster-color: transparent;
+}
+
+/* HOTSPOT SHARED STYLES */
+/* We set a high z-index to ensure they don't clip behind the canvas */
 .hotspot-label,
 .hotspot-card {
   display: block;
   border: none;
   background: transparent;
   padding: 0;
-  cursor: pointer;
   position: relative;
-  transition: opacity 0.3s ease, transform 0.3s ease;
-  /* GPU Acceleration hints */
-  will-change: transform, opacity; 
+  
+  /* GPU Acceleration */
+  will-change: transform, opacity;
+  
+  /* Ensure hotspots sit ON TOP of the model */
+  z-index: 10;
 }
 
-/* Hide hotspots when the camera is facing away or they are occluded */
-/* model-viewer automatically adds the .hide class */
-.hotspot-label.hide,
-.hotspot-card.hide {
-  opacity: 0;
-  pointer-events: none;
-}
-
-/* 3. The "Label" Hotspot (Cheese Cake) */
+/* HOTSPOT 1: LABEL (Cheese Cake) */
 .hotspot-label {
   background: var(--ar-glass-bg);
   backdrop-filter: blur(8px);
-  -webkit-backdrop-filter: blur(8px); /* Safari support */
+  -webkit-backdrop-filter: blur(8px);
   padding: 8px 16px;
   border-radius: 20px;
   border: 1px solid var(--ar-glass-border);
   box-shadow: var(--ar-shadow);
-  transform: translate3d(-50%, -50%, 0); /* Center the label on the point */
+  
+  /* Center the label exactly on the 3D point */
+  transform: translate(-50%, -50%);
+  
+  /* PREVENTS TEXT WRAPPING CLIPPING */
+  white-space: nowrap; 
 }
 
 .label-text {
-  font-family: system-ui, -apple-system, sans-serif;
+  font-family: sans-serif;
   font-weight: 700;
   font-size: 14px;
   color: var(--ar-text-primary);
-  white-space: nowrap;
 }
 
-/* 4. The "Card" Hotspots (Ingredients / Fact) */
+/* HOTSPOT 2 & 3: CARDS */
 .hotspot-card {
   background: var(--ar-glass-bg);
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
-  border-radius: var(--ar-radius);
+  border-radius: 12px;
   border: 1px solid var(--ar-glass-border);
   box-shadow: var(--ar-shadow);
-  width: 200px; /* Fixed width for consistency */
+  width: 200px;
   padding: 16px;
   text-align: left;
   
-  /* The anchor point is the top-left by default, let's shift it to center-bottom 
-     so it floats "above" the data-position */
-  transform: translate3d(-50%, 10px, 0); 
+  /* ANCHORING FIX: */
+  /* Shift left 50% so it centers horizontally */
+  /* Shift up 10px so it floats above the dot */
+  /* If this clips at the top of the screen, we can adjust via media queries */
+  transform: translate(-50%, 0); 
+  margin-top: 15px; /* Push it down slightly from the point */
 }
 
-/* Add a visual "connector" or dot so the user knows exactly where this links */
+/* The connector dot */
 .hotspot-card::before {
   content: '';
   position: absolute;
-  top: -8px; /* Position dot above the card */
+  top: -6px; /* Halfway out the top */
   left: 50%;
-  transform: translateX(-50%);
+  margin-left: -6px; /* Center alignment */
   width: 12px;
   height: 12px;
-  background-color: var(--ar-accent);
+  background-color: #007bff;
   border: 2px solid white;
   border-radius: 50%;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.2);
 }
 
 .card-header {
-  font-size: 12px;
+  font-size: 11px;
   text-transform: uppercase;
-  letter-spacing: 1px;
-  color: var(--ar-text-secondary);
-  margin-bottom: 8px;
-  font-weight: 600;
+  color: #666;
+  margin-bottom: 6px;
+  font-weight: 700;
 }
 
-.card-list {
-  list-style: none;
+.card-list, .card-text {
+  margin: 0;
   padding: 0;
-  margin: 0;
-  font-size: 14px;
-  color: var(--ar-text-primary);
-  line-height: 1.5;
-}
-
-.card-text {
-  margin: 0;
   font-size: 13px;
-  color: var(--ar-text-primary);
   line-height: 1.4;
+  list-style-position: inside; /* Keeps bullets inside the card width */
 }
 
-/* 5. The AR Activation Button */
-/* This is a specific slot in model-viewer */
+/* AR BUTTON FIX */
+/* ensure it is safely inside the viewport */
 .ar-button {
-  background-color: white;
-  border-radius: 24px;
-  border: none;
   position: absolute;
-  bottom: 24px;
+  /* Use safe area insets for iPhone X+ */
+  bottom: max(24px, env(safe-area-inset-bottom));
   left: 50%;
   transform: translateX(-50%);
+  
+  background-color: white;
+  border-radius: 30px;
+  border: none;
   padding: 12px 24px;
   font-weight: 600;
   box-shadow: 0 4px 12px rgba(0,0,0,0.2);
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  cursor: pointer;
-  z-index: 100; /* Ensure it sits above canvas */
-}
-
-.ar-button:active {
-  transform: translateX(-50%) scale(0.95);
+  z-index: 100;
 }

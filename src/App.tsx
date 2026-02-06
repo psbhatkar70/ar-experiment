@@ -21,7 +21,8 @@ function App() {
         ar-modes="webxr scene-viewer quick-look" 
         ar-scale="fixed"
         ar-placement="floor"
-        
+        disable-pan
+        disable-zoom
         // --- INTERACTION ---
         camera-controls
         interaction-prompt="auto"
