@@ -76,6 +76,41 @@ function App() {
 
         style={{ width: '100%', height: '100%' }} 
       >
+
+        <button className="hotspot-label" slot="hotspot-name" data-position="0m 0.6m -0.4m" data-normal="0m 0m 1m">
+          <div className="label-text">Cheese Cake</div>
+        </button>
+
+        {/* ... other hotspots ... */}
+        <button 
+          className="hotspot-card" 
+          slot="hotspot-ingredients" 
+          data-position="0.55m 0.5m 0m" 
+          data-normal="1m 0m 0m"
+        >
+          <div className="card-header">Ingredients</div>
+          <ul className="card-list">
+            <li>Dark Chocolate</li>
+            <li>Heavy Cream</li>
+            <li>Vanilla Bean</li>
+            <li>Sea Salt</li>
+          </ul>
+        </button>
+
+        {/* --- HOTSPOT 3: FACT (Left & Elevated) --- */}
+        {/* Y increased to 0.5m (was 0.2m) */}
+        <button 
+          className="hotspot-card" 
+          slot="hotspot-fact" 
+          data-position="-0.55m 0.5m 0m" 
+          data-normal="-1m 0m 0m"
+        >
+          <div className="card-header">Did you know?</div>
+          <p className="card-text">
+            The world's most expensive cake cost $75 million and was loaded with 4,000 diamonds.
+          </p>
+        </button>
+
         
         {/* Standard "See in AR" Button (Visible in Preview) */}
         <button slot="ar-button" className="ar-button">
