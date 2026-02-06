@@ -159,42 +159,54 @@ model-viewer {
 }
 
 /* THE BUTTONS THEMSELVES */
+/* AR CONTROLS OVERLAY */
+/* This container sits at the bottom of the AR Camera View */
+.ar-controls-overlay {
+  position: absolute;
+  bottom: 50px; /* Safe distance from bottom edge */
+  left: 50%;
+  transform: translateX(-50%);
+  
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  
+  background: rgba(0, 0, 0, 0.4); /* Dark background for contrast against camera */
+  backdrop-filter: blur(8px);
+  padding: 12px 24px;
+  border-radius: 40px;
+  
+  z-index: 9999; /* Max Z-Index to ensure it's on top of video feed */
+}
+
+/* BUTTONS */
 .control-btn {
-  /* Re-enable clicks on the buttons themselves */
-  pointer-events: auto; 
-  
-  /* SIZING: Big click targets for thumbs */
-  width: 64px;
-  height: 64px;
+  width: 48px;
+  height: 48px;
   border-radius: 50%;
-  
-  /* GLASSMORPHISM STYLE */
-  background: rgba(255, 255, 255, 0.9);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  border: 1px solid rgba(255, 255, 255, 0.6);
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
-  
-  /* LAYOUT */
+  background: white;
+  border: none;
   display: flex;
   align-items: center;
   justify-content: center;
-  
-  /* INTERACTION */
-  cursor: pointer;
-  border: none;
-  transition: transform 0.1s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.3);
 }
 
-/* TOUCH FEEDBACK */
 .control-btn:active {
-  transform: scale(0.90);
-  background: rgba(255, 255, 255, 1);
+  transform: scale(0.9);
 }
 
-/* ICONS inside buttons */
 .control-btn svg {
-  width: 32px;
-  height: 32px;
-  color: #333; /* Dark icon color for contrast */
+  width: 24px;
+  height: 24px;
+  color: #000;
+}
+
+/* LABEL */
+.control-label {
+  color: white;
+  font-weight: 800;
+  font-size: 12px;
+  letter-spacing: 1px;
+  text-shadow: 0 2px 4px rgba(0,0,0,0.5);
 }
