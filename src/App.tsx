@@ -1,4 +1,4 @@
-import  { useRef, useState, useEffect } from 'react';
+import  { useRef } from 'react';
 import './App.css';
 import '@google/model-viewer';
 
@@ -16,27 +16,27 @@ function App() {
   // Track rotation angle (Y-axis)
   const currentYRotation = useRef(0);
 
-  useEffect(() => {
-    const viewer = modelRef.current;
-    if (!viewer) return;
+  // useEffect(() => {
+  //   const viewer = modelRef.current;
+  //   if (!viewer) return;
 
     // EVENT LISTENER: Detect when user enters/exits AR
-    const handleARStatus = (event: any) => {
-      // 'session-started' means we are in the Camera View (WebXR)
-      if (event.detail.status === 'session-started') {
-        setIsARMode(true);
-      } else {
-        setIsARMode(false);
-      }
-    };
+    // const handleARStatus = (event: any) => {
+    //   // 'session-started' means we are in the Camera View (WebXR)
+    //   if (event.detail.status === 'session-started') {
+    //     setIsARMode(true);
+    //   } else {
+    //     setIsARMode(false);
+    //   }
+    // };
 
-    viewer.addEventListener('ar-status', handleARStatus);
+    // viewer.addEventListener('ar-status', handleARStatus);
 
     // Cleanup listener on unmount
-    return () => {
-      viewer.removeEventListener('ar-status', handleARStatus);
-    };
-  }, []);
+  //   return () => {
+  //     viewer.removeEventListener('ar-status', handleARStatus);
+  //   };
+  // }, []);
 
   const handleCakeRotate = (direction: number) => {
     const viewer = modelRef.current;
