@@ -1,37 +1,37 @@
-/// <reference types="vite/client" />
-/// <reference types="react" />
+// --- TYPE DEFINITIONS ---
+// This interface defines the shape of the <model-viewer> DOM element
+interface ModelViewerElement extends HTMLElement {
+  getCameraOrbit(): { theta: number; phi: number; radius: number };
+  cameraOrbit: string;
+  fieldOfView: string;
+  jumpCameraToGoal(): void;
+}
 
-// We use a namespace declaration here, which patches the global scope directly.
-// This avoids the "module" isolation issue you faced earlier.
-declare namespace JSX {
-  interface IntrinsicElements {
-    'model-viewer': React.DetailedHTMLProps<
-      React.HTMLAttributes<HTMLElement> & {
-        // Core Attributes
-        src: string;
-        alt: string;
-        poster?: string;
-        loading?: 'auto' | 'lazy' | 'eager';
-        reveal?: 'auto' | 'interaction' | 'manual';
-
-        // AR Attributes (The critical ones for your use case)
-        ar?: boolean;
-        'ar-modes'?: string; // 'webxr', 'scene-viewer', 'quick-look'
-        'ar-scale'?: 'auto' | 'fixed'; // Enforce 'fixed' for 1:1 scale
-        'ar-placement'?: 'floor' | 'wall';
-        
-        // UI & Camera Controls
-        'camera-controls'?: boolean;
-        'disable-zoom'?: boolean; // Critical for "no resizing"
-        'interaction-prompt'?: 'auto' | 'none' | 'when-focused';
-        'shadow-intensity'?: string | number;
-        'environment-image'?: string;
-        exposure?: string | number;
-
-        // Slot for custom buttons
-        slot?: string; 
-      },
-      HTMLElement
-    >;
+// This tells React that <model-viewer> is a valid JSX tag
+declare global {
+  namespace JSX {
+    interface IntrinsicElements {
+      'model-viewer': React.DetailedHTMLProps<
+        React.HTMLAttributes<HTMLElement> & {
+          src?: string;
+          alt?: string;
+          ar?: boolean;
+          'ar-modes'?: string;
+          'ar-scale'?: string;
+          'ar-placement'?: string;
+          'camera-controls'?: boolean;
+          'disable-pan'?: boolean;
+          'disable-zoom'?: boolean;
+          'interaction-prompt'?: string;
+          'camera-orbit'?: string;
+          'min-camera-orbit'?: string;
+          'max-camera-orbit'?: string;
+          'field-of-view'?: string;
+          'interpolation-decay'?: string;
+          ref?: React.RefObject<ModelViewerElement | null>; // Correct Ref Type
+        },
+        HTMLElement
+      >;
+    }
   }
 }
