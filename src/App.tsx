@@ -24,8 +24,6 @@ function App() {
         
         // --- INTERACTION ---
         camera-controls
-        disable-pan
-        disable-zoom
         interaction-prompt="auto"
         
         // --- CAMERA ---
