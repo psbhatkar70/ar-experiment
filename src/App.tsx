@@ -72,6 +72,35 @@ function App() {
         </button>
 
         {/* ... other hotspots ... */}
+        <button 
+          className="hotspot-card" 
+          slot="hotspot-ingredients" 
+          data-position="0.55m 0.5m 0m" 
+          data-normal="1m 0m 0m"
+        >
+          <div className="card-header">Ingredients</div>
+          <ul className="card-list">
+            <li>Dark Chocolate</li>
+            <li>Heavy Cream</li>
+            <li>Vanilla Bean</li>
+            <li>Sea Salt</li>
+          </ul>
+        </button>
+
+        {/* --- HOTSPOT 3: FACT (Left & Elevated) --- */}
+        {/* Y increased to 0.5m (was 0.2m) */}
+        <button 
+          className="hotspot-card" 
+          slot="hotspot-fact" 
+          data-position="-0.55m 0.5m 0m" 
+          data-normal="-1m 0m 0m"
+        >
+          <div className="card-header">Did you know?</div>
+          <p className="card-text">
+            The world's most expensive cake cost $75 million and was loaded with 4,000 diamonds.
+          </p>
+        </button>
+
 
         {/* --- TURNTABLE CONTROLS --- */}
         <div className="turntable-controls">
