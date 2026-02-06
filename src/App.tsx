@@ -1,21 +1,20 @@
-import  { useRef, useEffect } from 'react';
+import { useRef, useEffect } from 'react';
 import './App.css';
 import '@google/model-viewer';
 
-// --- 1. TYPE DEFINITIONS ---
-// We explicitly tell TS that 'orientation' exists on this element
+// --- TYPES ---
 interface ModelViewerElement extends HTMLElement {
   orientation: string; 
   updateFraming(): void;
 }
 
-// --- 2. CONFIGURATION (Moved here so it is found) ---
-// Initial coordinates for your hotspots.
-// These act as the "Home" positions before any rotation.
+// --- CONFIGURATION ---
+// 1. Define the starting positions (Home Base)
+// Y is Height (0.6m). X and Z are the floor plane.
 const HOTSPOTS_CONFIG = [
-  { id: 'name',        x: 0,     y: 0.6,  z: -0.4 }, // Cheese Cake
-  { id: 'ingredients', x: 0.55,  y: 0.5,  z: 0    }, // Ingredients
-  { id: 'fact',        x: -0.45, y: 0.5,  z: 0    }  // Fact
+  { id: 'name',        x: 0,     y: 0.6,  z: -0.4 }, 
+  { id: 'ingredients', x: 0.55,  y: 0.5,  z: 0    }, 
+  { id: 'fact',        x: -0.55, y: 0.5,  z: 0    }  
 ];
 
 const MODEL_SRC = "/models/cake.glb";
@@ -23,8 +22,7 @@ const MODEL_SRC = "/models/cake.glb";
 function App() {
   const modelRef = useRef<ModelViewerElement>(null);
   
-  // --- 1. REFS FOR BUTTONS ---
-  // We need direct access to the buttons to update them fast
+  // 2. CREATE REFS FOR THE BUTTONS
   const nameRef = useRef<HTMLButtonElement>(null);
   const ingRef = useRef<HTMLButtonElement>(null);
   const factRef = useRef<HTMLButtonElement>(null);
@@ -33,18 +31,12 @@ function App() {
   const currentRotation = useRef(0);
   const requestRef = useRef<number | null>(null);
 
-  // --- 2. THE MATH HELPER ---
-  // Calculates where a point (x, z) should be after rotating by 'angleDeg'
+  // --- MATH HELPER ---
   const rotateCoordinate = (x: number, z: number, angleDeg: number) => {
-    // Convert degrees to radians
     const rad = (angleDeg * Math.PI) / 180;
-    
-    // Standard Rotation Matrix
-    // We rotate around the origin (0,0)
-    // Note: If they spin the wrong way, change '-' to '+' in the sin/cos terms
+    // Rotate X and Z around the center (0,0)
     const newX = x * Math.cos(rad) - z * Math.sin(rad);
     const newZ = x * Math.sin(rad) + z * Math.cos(rad);
-    
     return { x: newX, z: newZ };
   };
 
@@ -65,27 +57,26 @@ function App() {
     requestRef.current = requestAnimationFrame(animateRotation);
   };
 
-  // --- 3. THE SCENE UPDATER ---
   const updateScene = (angle: number) => {
-    // A. Rotate the Cake Mesh (Z-Axis, as per your setup)
+    // A. Rotate Cake (Z-Axis due to Blender export)
     if (modelRef.current) {
       modelRef.current.orientation = `0deg 0deg ${angle}deg`;
     }
 
-    // B. Rotate the Hotspots (Orbit around Scene Y-Axis)
+    // B. Rotate Hotspots
     const refs = [nameRef, ingRef, factRef];
     
+    // DEBUG: Check your console. If this says "Missing Ref", the JSX is wrong.
+    if (!refs[0].current) console.warn("DEBUG: Button Refs are null! Check JSX.");
+
     HOTSPOTS_CONFIG.forEach((config, index) => {
       const element = refs[index].current;
-      if (!element) return;
+      if (!element) return; // Skip if ref is broken
 
-      // Calculate new floor position (X and Z)
-      // We pass the NEGATIVE angle if the directions are opposite. 
-      // Try 'angle' first. If hotspots fly left while cake spins right, use '-angle'.
-      const { x: newX, z: newZ } = rotateCoordinate(config.x, config.z, angle);
+      // Rotate the coordinate - Note the MINUS angle to sync with cake direction
+      const { x: newX, z: newZ } = rotateCoordinate(config.x, config.z, -angle);
 
-      // Update the DOM. 
-      // Format: "X Y Z" (Y is constant height)
+      // Apply new position to DOM
       element.dataset.position = `${newX}m ${config.y}m ${newZ}m`;
     });
   };
@@ -93,7 +84,6 @@ function App() {
   const handleCakeRotate = (direction: number) => {
     const step = 45; 
     targetRotation.current += (direction * step);
-
     if (requestRef.current !== null) cancelAnimationFrame(requestRef.current);
     requestRef.current = requestAnimationFrame(animateRotation);
   };
@@ -121,9 +111,11 @@ function App() {
         style={{ width: '100%', height: '100%' }} 
       >
 
-        {/* --- CONNECT REFS TO BUTTONS --- */}
+        {/* --- CRITICAL: ATTACH THE REFS HERE --- */}
+        {/* If you miss 'ref={nameRef}', the hotspot will NEVER move */}
+        
         <button 
-          ref={nameRef}  // <--- ATTACH REF
+          ref={nameRef}  
           className="hotspot-label" 
           slot="hotspot-name" 
           data-position="0m 0.6m -0.4m" 
@@ -133,7 +125,7 @@ function App() {
         </button>
 
         <button 
-          ref={ingRef} // <--- ATTACH REF
+          ref={ingRef} 
           className="hotspot-card" 
           slot="hotspot-ingredients" 
           data-position="0.55m 0.5m 0m" 
@@ -147,20 +139,19 @@ function App() {
         </button>
 
         <button 
-          ref={factRef} // <--- ATTACH REF
+          ref={factRef} 
           className="hotspot-card" 
           slot="hotspot-fact" 
-          data-position="-0.45m 0.5m 0m" 
+          data-position="-0.55m 0.5m 0m" 
           data-normal="-1m 0m 0m"
         >
           <div className="card-header">Did you know?</div>
           <p className="card-text">Expensive cake.</p>
         </button>
 
-        {/* ... Rest of your UI ... */}
+        {/* ... Rest of UI ... */}
         <button slot="ar-button" className="ar-button">View in your space</button>
-        
-        {/* Your Buttons */}
+
         <div className="ar-controls-overlay">
            <button className="control-btn" onClick={(e) => { e.stopPropagation(); handleCakeRotate(-1); }}>
              <svg viewBox="0 0 24 24"><path fill="currentColor" d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/></svg>
