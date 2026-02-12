@@ -109,7 +109,11 @@ function App() {
         ar-modes="webxr scene-viewer quick-look" 
         ar-scale="fixed" 
         ar-placement="floor"
+        camera-orbit="0deg 75deg 0.3m"
+        camera-target="0m 0.1m 0.3m"
+        interpolation-decay="200"
         camera-controls
+        touch-action="none"
         disable-zoom
         orientation="0deg 0deg 0deg"
         style={{ width: '100%', height: '100%' }} 
